@@ -12,6 +12,8 @@ describe('TodoMVC Test', () => {
             page = new TodosPage();
             browser.waitForAngularEnabled(false); //For non angular apps
             page.navigateToTodosPage();
+
+            //TODO: Need to add wait for ajax/jquery calls to finish before continuing with the tests
         });
         
         //Check for fresh state of the website
@@ -20,16 +22,29 @@ describe('TodoMVC Test', () => {
             expect(await page.todoList().isDisplayed()).not.toBe(true);
         });
 
+
+        //TODO: Need to find a way on how to test for element active
         xit('Should focus on the todo input textbox', async () => {
             // expect((await page.newTodoTextbox()).getWebElement()).toEqual(browser.driver.switchTo().activeElement())
             // expect(page.newTodoTextbox()).tobeActive();
         });
 
-        //TODO: Check if possible on Protractor Selenium
         it('Should have zero number of todos in local storage', async () => {
             
-            const value = await browser.executeScript("return window.sessionStorage;");
-            console.log(value);
+            /**
+             * TODO: Get API request to fetch object value instead of session storage
+             * e.g.
+             * [{"title":"ITEM1","completed":false,"url":"https://todo-backend-django.herokuapp.com/1098",
+             * "order":1},
+             * {"title":"ITEM2","completed":false,"url":"https://todo-backend-django.herokuapp.com/1099","order":2},
+             * {"title":"item3","completed":false,"url":"https://todo-backend-django.herokuapp.com/1100","order":3}]
+             * https://todo-backend-django.herokuapp.com/#/
+             */
+            // const value = await browser.executeScript("return window.localStorage;");
+            // console.log(value);
+
+            // const test = await browser.executeScript("return window.location.search.substr(1);");
+            // console.log(test);
 
         });
 
