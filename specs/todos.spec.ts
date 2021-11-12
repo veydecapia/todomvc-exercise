@@ -1,5 +1,6 @@
 import { TodosPage } from "../page-objects/todos.page";
 import { browser } from "protractor";
+import { BrowserStack } from "protractor/built/driverProviders";
 
 
 describe('TodoMVC Test', () => {
@@ -14,25 +15,32 @@ describe('TodoMVC Test', () => {
         });
         
         //Check for fresh state of the website
-        fit('Should have no items previously added', () => {
-           
+        it('Should have no items previously added', async () => {
+            // browser.executeScript("return window.sessionStorage.clear();");
+            expect(await page.todoList().isDisplayed()).not.toBe(true);
         });
 
-        it('Should focus on the todo input textbox', () => {
-            
+        xit('Should focus on the todo input textbox', async () => {
+            // expect((await page.newTodoTextbox()).getWebElement()).toEqual(browser.driver.switchTo().activeElement())
+            // expect(page.newTodoTextbox()).tobeActive();
         });
 
-        //TODO: Check if possible on Protrator Selenium
-        it('Should have zero number of todos in local storage', () => {
+        //TODO: Check if possible on Protractor Selenium
+        it('Should have zero number of todos in local storage', async () => {
             
+            const value = await browser.executeScript("return window.sessionStorage;");
+            console.log(value);
+
         });
 
-        it('Should have correct placeholder', () => {
-            
+        it('Should have correct placeholder', async () => {
+            expect(await page.newTodoTextbox().getAttribute("placeholder"))
+                            .toBe("What needs to be done?");
         });
 
-        it('Should not display main and footer', () => {
-            
+        it('Should not display main and footer', async () => {
+            expect(await page.mainSection().isDisplayed()).not.toBe(true);
+            expect(await page.footerSection().isDisplayed()).not.toBe(true);
         });
         
     });
