@@ -1,12 +1,20 @@
+import { TodosPage } from "../page-objects/todos.page";
+import { browser } from "protractor";
 
 
 describe('TodoMVC Test', () => {
+    let page: TodosPage;
     
-    describe('Go to Todo website', () => {
+    fdescribe('Go to Todo website', () => {
+
+        beforeAll(() => {
+            page = new TodosPage();
+            browser.waitForAngularEnabled(false); //For non angular apps
+            page.navigateToTodosPage();
+        });
         
         //Check for fresh state of the website
-        it('Should focus on the todo input textbox', () => {
-        it('Should have no items previously added', () => {
+        fit('Should have no items previously added', () => {
            
         });
 
