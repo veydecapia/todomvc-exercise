@@ -15,11 +15,6 @@ describe('TodoMVC Test', () => {
             page = new TodosPage();
             browser.waitForAngularEnabled(false); //For non angular apps
             page.navigateToTodosPage();
-
-            //TODO: Need to add wait for ajax/jquery calls to finish before continuing with the tests
-            // await waitForAjax('https://todo-backend-django.herokuapp.com/action');
-
-            browser.sleep(1000);
         });
 
         //Check for fresh state of the website
@@ -73,7 +68,7 @@ describe('TodoMVC Test', () => {
             page = new TodosPage();
             browser.waitForAngularEnabled(false); //For non angular apps
             page.navigateToTodosPage();
-            browser.sleep(2000); //TODO: Convert to wait for jquery/ajax
+            
 
             //Perform cleanup. Clear any added items in the list.
             browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
@@ -114,7 +109,7 @@ describe('TodoMVC Test', () => {
                     expect(await page.todoCountLbl().getText()).toBe(count.toString());
                 });
      
-                it('Should dipslay main and footer', async () => {
+                it('Should display main and footer', async () => {
                     expect(await page.mainSection().isDisplayed()).toBe(true);
                     expect(await page.footerSection().isDisplayed()).toBe(true);
                 });

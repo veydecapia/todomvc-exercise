@@ -51,6 +51,8 @@ export class TodosPage {
             EC.titleIs("Todo-Backend client"),
             DEFAULT_TIMEOUT
         );
+
+        browser.sleep(2000); //TODO: Convert to wait for jquery/ajax
     }
 
 
