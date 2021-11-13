@@ -51,7 +51,6 @@ export class TodosPage {
             EC.titleIs("Todo-Backend client"),
             DEFAULT_TIMEOUT
         );
-
         browser.sleep(2000); //TODO: Convert to wait for jquery/ajax
     }
 
@@ -69,7 +68,7 @@ export class TodosPage {
             while(await this.itemsLbl(0).isDisplayed()) {
                 await hover(this.itemsLbl(0));
                 await click(this.deleteItemBtn(0));
-            }   
+            }
         } catch (error) {
             return true;
         }

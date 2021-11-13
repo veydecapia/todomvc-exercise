@@ -2,7 +2,6 @@ import { TodosPage } from "../page-objects/todos.page";
 import { browser } from "protractor";
 import * as todo from "../test-data/todo.json";
 import { DEFAULT_TIMEOUT } from "../shared/config";
-import { click, hover } from "../shared/utils";
 
 
 
@@ -63,16 +62,14 @@ describe('TodoMVC Test', () => {
 
 
     fdescribe('Add new todo', () => {
-    
+
         beforeAll( async () => {
             page = new TodosPage();
             browser.waitForAngularEnabled(false); //For non angular apps
             page.navigateToTodosPage();
-            
 
             //Perform cleanup. Clear any added items in the list.
             browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
-            // page.performItemsCleanUp();
         });
 
         afterAll( async () => {
@@ -100,13 +97,9 @@ describe('TodoMVC Test', () => {
                     expect(await page.newTodoTextbox().getText()).toBe("");
                 });
      
-                it('Should trim the text input', () => {
-                    
-                });
-     
                 it('Should add Todo count', async () => {
-                    const count = index + 1;
-                    expect(await page.todoCountLbl().getText()).toBe(count.toString());
+                    let itemCount  = index + 1;
+                    expect(await page.todoCountLbl().getText()).toBe(itemCount.toString());
                 });
      
                 it('Should display main and footer', async () => {
@@ -119,6 +112,19 @@ describe('TodoMVC Test', () => {
                 });
 
              });
+        });
+
+
+        it('Should trim the text input', async () => {
+            //Arrange
+            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
+            
+            //Act
+            const todoText = todo[0];
+            await page.addTodoListItem(`    ${todoText}    `);
+
+            //Assert
+            expect(await page.itemsLbl(0).getText()).toBe(todoText); // Check first item
         });
         
     });
