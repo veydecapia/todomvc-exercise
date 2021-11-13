@@ -2,6 +2,7 @@ import { TodosPage } from "../page-objects/todos.page";
 import { browser } from "protractor";
 import * as todo from "../test-data/todo.json";
 import { DEFAULT_TIMEOUT } from "../shared/config";
+import { click } from "../shared/utils";
 
 
 
@@ -125,48 +126,69 @@ describe('TodoMVC Test', () => {
     });
 
 
-    describe('Mark all todo items as complete', () => {
+    fdescribe('Mark all todo items as complete', () => {
 
-        //TODO: Can be created as a function
         beforeAll(() => {
-            //Make sure no items stored in local storage.
-            //Clear any previous added items if there are any
+            page.beforeAll();
         });
 
-        //TODO: Can be created as a function
         afterAll(() => {
             //Perform cleanup. Clear any added items in the list.
+            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
         });
 
-        it('Should mark all items as complete', () => {
+        it('Should mark all items as complete', async () => {
             //Arrange: Add items
+            todo.forEach( async (item) => {
+                await browser.sleep(2000);
+
+                await page.addTodoListItem(item);
+            });
+
+            //Act
+            await click(page.toggleAll());
+
 
             /**
              * Assert for
-             * All items have Strike through text (class destroy)
              * All items is checked (class completed)
              * 0 items left (todo-count)
              * Clear completed is displayed
              */
+            
+            //Assert
+            for( let i = 0; i < todo.length; i++){
+                expect(await page.items(i).getAttribute('class')).toBe('completed');
+            }
+
+            expect(await page.todoCountLbl().getText()).toBe('0');
+            expect(await page.clearCompletedBtn().isDisplayed()).toBe(true);
+
         });
 
-        it('Should clear completed items in the list', () => {
-            
+        it('Should clear completed items in the list', async () => {
+            //Act
+            await click(page.clearCompletedBtn());
+
+            //Assert
+
             //Fresh state
             /**
              * No todo items displayed
              */
+             expect(await page.todoList().isDisplayed()).not.toBe(true);
         });
 
-        it('Should main and footer is not displayed', () => {
-            
+        it('Should not display main and footer', async () => {
+            expect(await page.mainSection().isDisplayed()).not.toBe(true);
+            expect(await page.footerSection().isDisplayed()).not.toBe(true);
         });
 
-        it('Should toggle all is not displayed', () => {
-            
+        it('Should toggle all is not displayed', async () => {
+            expect(await page.toggleAll().isDisplayed()).toBe(true);
         });
 
-        it('Should have zero number of todos in local storage', () => {
+        xit('Should have zero number of todos in local storage', () => {
             
         });
 
