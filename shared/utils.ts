@@ -130,3 +130,22 @@ export function sleep(
     return browser.sleep(time);
 }
 
+
+export const waitForAjax = async (
+    action: string
+)
+: Promise<void> => {
+    
+    const script = "var callback = arguments[arguments.length - 1];"
+                    + "var xhr = new XMLHttpRequest();"
+                    + "xhr.open('GET', '/"+ action +"', true);"
+                    + "xhr.onreadystatechange = function() {" 
+                    + "  if (xhr.readyState == 4) {"
+                    + "    callback(xhr.responseText);" 
+                    + "  }" 
+                    + "};" 
+                    + "xhr.send();"
+    
+    browser.executeAsyncScript(script);
+    // await browser.wait(browser.executeScript("return xhr.readyState;"), DEFAULT_TIMEOUT);
+}
