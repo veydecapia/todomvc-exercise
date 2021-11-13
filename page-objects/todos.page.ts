@@ -73,4 +73,12 @@ export class TodosPage {
             return true;
         }
     }
+
+    beforeAll = async (): Promise<void> => {
+        browser.waitForAngularEnabled(false); //For non angular apps
+        this.navigateToTodosPage();
+
+        //Perform cleanup. Clear any added items in the list.
+        browser.wait(this.performItemsCleanUp(), DEFAULT_TIMEOUT);
+    }
 }

@@ -7,13 +7,12 @@ import { DEFAULT_TIMEOUT } from "../shared/config";
 
 describe('TodoMVC Test', () => {
     let page: TodosPage;
+    page = new TodosPage();
     
     describe('Go to Todo website', () => {
 
         beforeAll( async () => {
-            page = new TodosPage();
-            browser.waitForAngularEnabled(false); //For non angular apps
-            page.navigateToTodosPage();
+            page.beforeAll();
         });
 
         //Check for fresh state of the website
@@ -61,15 +60,10 @@ describe('TodoMVC Test', () => {
     });
 
 
-    fdescribe('Add new todo', () => {
+    describe('Add new todo', () => {
 
         beforeAll( async () => {
-            page = new TodosPage();
-            browser.waitForAngularEnabled(false); //For non angular apps
-            page.navigateToTodosPage();
-
-            //Perform cleanup. Clear any added items in the list.
-            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
+            page.beforeAll();
         });
 
         afterAll( async () => {
@@ -85,10 +79,11 @@ describe('TodoMVC Test', () => {
                     await page.addTodoListItem(item);
                 });
 
-                it('Should label contains ' + item, async () => {
+                it('Should label contains ' + item + ' & appends to the bottom of the list', async () => {
                     expect(await page.itemsLbl(index).getText()).toBe(item);
                 }); 
-     
+                
+                //Already covered by previous it block
                 xit('Should append one item to the bottom of the list', () => {
                     
                 });
