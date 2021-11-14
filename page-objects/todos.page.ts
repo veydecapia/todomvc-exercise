@@ -1,9 +1,8 @@
 import { browser, element, by } from "protractor";
 import { protractor } from "protractor/built/ptor";
-import { click, hover, sleep } from "../shared/utils";
+import { click, hover, sleep, waitForAjax } from "../shared/utils";
 import { DEFAULT_TIMEOUT } from "../shared/config";
 import * as env from "../shared/constants/environment-properties.json";
-import * as webdriver from 'selenium-webdriver';
 
 
 export class TodosPage {
@@ -64,46 +63,26 @@ export class TodosPage {
             EC.titleIs("Todo-Backend client"),
             DEFAULT_TIMEOUT
         );
-        browser.sleep(2000); //TODO: Convert to wait for jquery/ajax
+
+        //Wait for ajax call to finish
+        await waitForAjax();
     }
 
 
     addTodoListItem = async (
         item: string
     ): Promise<void> => {
-        //Note current count to compare later
-        let count = await this.getCurrentCount();
-        console.log("Count : " + count);
-
         await this.newTodoTextbox().clear();
         await this.newTodoTextbox().sendKeys(item);
         await this.newTodoTextbox().sendKeys(protractor.Key.ENTER);
 
-        //Wait for the list to display
-        // await browser.wait(this.waitForItemToAdd(count), DEFAULT_TIMEOUT);
-    }
-
-    getCurrentCount = async ():Promise<number>  => {
-        try {
-            return parseInt(await this.todoCountLbl().getText());
-        } catch (error) {
-            return 0;
-        }
-    }
-
-    waitForItemToAdd = async (
-        count: number
-    ): webdriver.promise.Promise<boolean> => {
-        console.log(await this.getCurrentCount());
-        while(await this.getCurrentCount() !== ++count){
-            sleep(500);
-        }
-        return true;
+        //Wait for ajax call to finish
+        await waitForAjax();
     }
 
     performItemsCleanUp = async (): Promise<boolean> => {
         try {
-            while(await this.itemsLbl(0).isDisplayed()) {
+            while(await this.items(0).isDisplayed()) {
                 await hover(this.itemsLbl(0));
                 await click(this.deleteItemBtn(0));
             }
@@ -114,7 +93,7 @@ export class TodosPage {
 
     beforeAll = async (): Promise<void> => {
         browser.waitForAngularEnabled(false); //For non angular apps
-        this.navigateToTodosPage();
+        await this.navigateToTodosPage();
 
         //Perform cleanup. Clear any added items in the list.
         browser.wait(this.performItemsCleanUp(), DEFAULT_TIMEOUT);
