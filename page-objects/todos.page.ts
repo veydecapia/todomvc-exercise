@@ -1,6 +1,6 @@
 import { browser, element, by } from "protractor";
 import { protractor } from "protractor/built/ptor";
-import { click, hover, sleep, waitForAjax } from "../shared/utils";
+import { click, hover, waitForAjax } from "../shared/utils";
 import { DEFAULT_TIMEOUT } from "../shared/config";
 import * as env from "../shared/constants/environment-properties.json";
 
@@ -39,6 +39,10 @@ export class TodosPage {
 
     items(index: number){
         return this.todoList().all(by.css("li")).get(index);
+    }
+
+    itemsCount(){
+        return this.todoList().all(by.css("li")).count();
     }
 
     itemsLbl(index: number){

@@ -3,6 +3,8 @@ import { browser } from "protractor";
 import * as todo from "../test-data/todo.json";
 import { DEFAULT_TIMEOUT } from "../shared/config";
 import { click } from "../shared/utils";
+import { protractor } from "protractor/built/ptor";
+import { fail } from "assert";
 
 
 
@@ -93,7 +95,7 @@ describe('TodoMVC Test', () => {
                     expect(await page.newTodoTextbox().getText()).toBe("");
                 });
      
-                it('Should add Todo count', async () => {
+                it('Should add one items left', async () => {
                     let itemCount  = index + 1;
                     expect(await page.todoCountLbl().getText()).toBe(itemCount.toString());
                 });
@@ -126,7 +128,7 @@ describe('TodoMVC Test', () => {
     });
 
 
-    fdescribe('Mark all todo items as complete', () => {
+    describe('Mark all todo items as complete', () => {
 
         beforeAll(() => {
             page.beforeAll();
@@ -183,7 +185,7 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should toggle all is not displayed', async () => {
-            expect(await page.toggleAll().isDisplayed()).toBe(false);
+            expect(await page.toggleAll().isDisplayed()).not.toBe(true);
         });
 
         xit('Should have zero number of todos in local storage', () => {
@@ -196,17 +198,28 @@ describe('TodoMVC Test', () => {
 
     describe('Unmark all todo items as complete', () => {
         
-        beforeAll(() => {
-            //Make sure no items stored in local storage.
-            //Clear any previous added items if there are any
+        beforeAll( async () => {
+            page.beforeAll();
         });
 
         afterAll(() => {
             //Perform cleanup. Clear any added items in the list.
+            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
         });
 
 
-        it('Should unmark all items as complete', () => {
+        it('Should unmark all items as complete', async () => {
+            //Arrange: Add items
+            for await (const item of todo) {
+                await page.addTodoListItem(item);
+            }
+            //Mark all as complete
+            await click(page.toggleAll());
+
+
+            //Act
+            //Unmark all
+            await click(page.toggleAll());
             
             /**
              * Assert for negative of the below
@@ -215,17 +228,27 @@ describe('TodoMVC Test', () => {
              * 0 items left (todo-count) / correct # of items left is displayed
              * Clear completed is displayed
              */
-        });
-
-        it('Should clear completed is not displayed', () => {
             
+            //Assert
+            for( let i = 0; i < todo.length; i++){
+                expect(await page.items(i).getAttribute('class')).not.toBe('completed');
+            }
+
+            expect(await page.todoCountLbl().getText()).not.toBe('0');
         });
 
-        it('Should toggle all is not checked', () => {
-            
+        it('Should clear completed is not displayed', async () => {
+            if(!protractor.ExpectedConditions.invisibilityOf(page.clearCompletedBtn())){
+                fail("Clear completed button still visible.");
+            }
         });
 
-        it('Should have correct number of todos in local storage', () => {
+        it('Should have correct todo items left', async () => {
+            expect((await page.itemsCount()).toString())
+                    .toBe(await page.todoCountLbl().getText());
+        });
+
+        xit('Should have correct number of todos in local storage', () => {
             
         });
 
@@ -233,7 +256,7 @@ describe('TodoMVC Test', () => {
     });
 
 
-    describe('Mark todo items as complete', () => {
+    fdescribe('Mark todo items as complete', () => {
         
         beforeAll(() => {
             //Make sure no items stored in local storage.
