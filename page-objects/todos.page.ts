@@ -41,8 +41,8 @@ export class TodosPage {
         return this.todoList().all(by.css("li")).get(index);
     }
 
-    itemsCount(){
-        return this.todoList().all(by.css("li")).count();
+    itemsCount = async (): Promise<number> =>{
+        return await this.todoList().all(by.css("li")).count();
     }
 
     itemsLbl(index: number){
@@ -55,6 +55,10 @@ export class TodosPage {
 
     markAsCompleteChkbox(index: number){
         return this.items(index).element(by.css(".toggle"));
+    }
+
+    editTextbox(index: number){
+        return this.items(index).element(by.css(".edit"));
     }
 
 
@@ -88,6 +92,22 @@ export class TodosPage {
         await waitForAjax();
     }
 
+
+    editTodoListItem = async (
+        index: number, //Index item
+        text: string //Value to type
+    ) => {
+
+        await browser.actions()
+            .mouseMove(this.items(index))
+            .doubleClick()
+            .sendKeys(protractor.Key.chord(protractor.Key.CONTROL,"a"))
+            .sendKeys(protractor.Key.BACK_SPACE)
+            .sendKeys(text)
+            .perform();
+    }
+
+    
     performItemsCleanUp = async (): Promise<boolean> => {
         try {
             while(await this.items(0).isDisplayed()) {

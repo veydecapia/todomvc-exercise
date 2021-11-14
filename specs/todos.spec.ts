@@ -2,9 +2,10 @@ import { TodosPage } from "../page-objects/todos.page";
 import { browser } from "protractor";
 import * as todo from "../test-data/todo.json";
 import { DEFAULT_TIMEOUT } from "../shared/config";
-import { click } from "../shared/utils";
+import { click, waitForAjax } from "../shared/utils";
 import { protractor } from "protractor/built/ptor";
 import { fail } from "assert";
+import { BrowserStack } from "protractor/built/driverProviders";
 
 
 
@@ -326,43 +327,130 @@ describe('TodoMVC Test', () => {
 
 
     fdescribe('Edit a todo item', () => {
-        
-        it('Should edit an item', () => {
-            
+
+        beforeAll( async () => {
+            page.beforeAll();
         });
 
-        it('Should toggle complete and delete button not displayed', () => {
+        afterAll(() => {
+            //Perform cleanup. Clear any added items in the list.
+            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
+        });
+        
+        it('Should edit an item', async () => {
+            //Arrange: Add items
+            for await (const item of todo) {
+                await page.addTodoListItem(item);
+            }
+
+            const editedText = "EDITED ITEM 1";
+            //Act: Edit item 1
+            await page.editTodoListItem(0, editedText);
             
+
+            await click(page.newTodoTextbox()); //Blur
+            await waitForAjax();
+
+            //Assert
+            expect(await page.itemsLbl(0).getText()).toBe(editedText);
+        });
+
+        it('Should complete and delete button not displayed when editing an item', async () => {
+            
+            //Act: Edit item 1
+            await browser.actions()
+                            .mouseMove(page.items(0))
+                            .doubleClick()
+                            .perform();
             /**
              * class toggle and destroy not displayed
              * class editing
              * class contain focus-visible
              */
+
+             if(!protractor.ExpectedConditions.invisibilityOf(page.markAsCompleteChkbox(0))){
+                fail("Mark as complete checkbox control still visible.");
+            }
+
+            if(!protractor.ExpectedConditions.invisibilityOf(page.deleteItemBtn(0))){
+                fail("Mark as complete checkbox control still visible.");
+            }
+
+            //Teardown
+            await click(page.newTodoTextbox()); //Blur
+            await waitForAjax();
         });
 
-        it('Should save edits on enter', () => {
+        it('Should save edits on enter', async () => {
+            const editedText = "EDITED ITEM 2";
+
+            //Act: Edit item 2
+            await page.editTodoListItem(1, editedText);
+
+            await page.editTextbox(1).sendKeys(protractor.Key.ENTER);
+            await waitForAjax();
+
+            //Assert
+            expect(await page.itemsLbl(1).getText()).toBe(editedText);
+        });
+
+        it('Should save edits on blur', async () => {
+            const editedText = "EDITED ITEM 3";
+
+            //Act: Edit item 3
+            await page.editTodoListItem(2, editedText);
+
+            await click(page.newTodoTextbox()); //Blur
+            await waitForAjax();
+
+            //Assert
+            expect(await page.itemsLbl(2).getText()).toBe(editedText);
+        });
+
+        it('Should trim input text', async () => {
+            const editedText = "      EDITED ITEM 1 WITH TRAILING SPACES     ";
+
+            //Act: Edit item 1
+            await page.editTodoListItem(0, editedText);
+
+            await click(page.newTodoTextbox()); //Blur
+            await waitForAjax();
+
+            //Assert
+            expect(await page.itemsLbl(0).getText()).toBe("EDITED ITEM 1 WITH TRAILING SPACES");
+        });
+
+        it('Should remove the item if input text is empty', async () => {
+            //Get current count
+            let count = await page.itemsCount();
+            const editedText = "";
+
+            //Act: Edit item 1
+            await page.editTodoListItem(0, editedText);
             
-        });
 
-        it('Should save edits on blur', () => {
-            
-            /**
-             * Click on other button or element
-             * If possible send blur event
-             */
-        });
+            await click(page.newTodoTextbox()); //Blur
+            await waitForAjax();
 
-        it('Should trim input text', () => {
-            
-        });
-
-        it('Should remove the item if input text is empty', () => {
-        
+            //Assert
+            let assertCount = count - 1;
+            expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             //getNumber of Todos in Local Storage
         });
 
-        it('Should cancel edit on escape', () => {
-            
+        it('Should cancel edit on escape', async () => {
+
+            const editedText = "TEST EDIT FOO";
+
+            //Act: Edit item 1
+            await page.editTodoListItem(0, editedText);
+
+            await page.editTextbox(0).sendKeys(protractor.Key.ESCAPE);
+            await waitForAjax();
+
+            //Assert
+            expect(await page.itemsLbl(0).getText()).not.toBe(editedText);
+            //getNumber of Todos in Local Storage
         });
 
     });
