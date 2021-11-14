@@ -2,6 +2,7 @@ import { browser, ElementFinder, element, Locator } from "protractor"
 import { DEFAULT_TIMEOUT, DEFAULT_RETRIES } from "./config"
 import * as webdriver from 'selenium-webdriver';
 import { protractor } from "protractor/built/ptor";
+import * as env from "../shared/constants/environment-properties.json";
 
 
 
@@ -131,21 +132,23 @@ export function sleep(
 }
 
 
-export const waitForAjax = async (
-    action: string
-)
+export const waitForAjax = async ()
 : Promise<void> => {
-    
-    const script = "var callback = arguments[arguments.length - 1];"
-                    + "var xhr = new XMLHttpRequest();"
-                    + "xhr.open('GET', '/"+ action +"', true);"
-                    + "xhr.onreadystatechange = function() {" 
-                    + "  if (xhr.readyState == 4) {"
-                    + "    callback(xhr.responseText);" 
-                    + "  }" 
-                    + "};" 
-                    + "xhr.send();"
-    
-    browser.executeAsyncScript(script);
-    // await browser.wait(browser.executeScript("return xhr.readyState;"), DEFAULT_TIMEOUT);
+    const request = env.PROD.requestURL;
+
+    console.log("Request: " + request);
+
+    browser.executeAsyncScript(function() {
+            var callback = arguments[arguments.length - 1];
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", "https://todo-backend-django.herokuapp.com/", true);
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState == 4) {
+                        callback(xhr.responseText);
+                        }
+                    };
+                    xhr.send('');
+                }).then( (str: any) => {
+                console.log("item name: " + str);
+            });
 }
