@@ -256,41 +256,68 @@ describe('TodoMVC Test', () => {
     });
 
 
-    fdescribe('Mark todo items as complete', () => {
+    describe('Mark todo items as complete', () => {
         
-        beforeAll(() => {
-            //Make sure no items stored in local storage.
-            //Clear any previous added items if there are any
+        beforeAll( async () => {
+            page.beforeAll();
         });
-    
+
         afterAll(() => {
             //Perform cleanup. Clear any added items in the list.
+            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
         });
 
-        it('Should mark an item 1 as complete', () => {
+        it('Should mark an item 1 as complete', async () => {
             //TODO: Add a function for create todo
             //Arrange: Add items
+            for await (const item of todo) {
+                await page.addTodoListItem(item);
+            }
 
             //Act: Check item 1
+            await click(page.markAsCompleteChkbox(0));
 
             //Assert
             /**
              * Item 1 should be checked
              * Item 2 should not be checked
              */
+
+            expect(await page.items(0).getAttribute("class")).toBe("completed");
+            expect(await page.items(1).getAttribute("class")).not.toBe("completed");
         });
 
-        it('Should mark an item 2 as complete', () => {
-        
+        it('Should mark an item 2 as complete', async () => {
+            //Act: Check item 2
+            await click(page.markAsCompleteChkbox(1));
+
+            //Assert
+            /**
+             * Item 1 should be checked
+             * Item 2 should not be checked
+             */
+
+            expect(await page.items(0).getAttribute("class")).toBe("completed");
+            expect(await page.items(1).getAttribute("class")).toBe("completed");
         });
 
-        it('Should unmark an item as complete', () => {
-            
+        it('Should unmark an item as complete', async () => {
+            //Act: Check item 1
+            await click(page.markAsCompleteChkbox(0));
+
+            //Assert
+            /**
+             * Item 1 should be checked
+             * Item 2 should not be checked
+             */
+
+            expect(await page.items(0).getAttribute("class")).not.toBe("completed");
+            expect(await page.items(1).getAttribute("class")).toBe("completed");
         });
 
 
         //TODO: Create a function for checking local storage
-        it('Should have correct number of todos in local storage', () => {
+        xit('Should have correct number of todos in local storage', () => {
             
         });
 
@@ -298,7 +325,7 @@ describe('TodoMVC Test', () => {
     });
 
 
-    describe('Edit a todo item', () => {
+    fdescribe('Edit a todo item', () => {
         
         it('Should edit an item', () => {
             

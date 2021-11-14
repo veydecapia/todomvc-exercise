@@ -53,6 +53,10 @@ export class TodosPage {
         return element(by.id("clear-completed"));
     }
 
+    markAsCompleteChkbox(index: number){
+        return this.items(index).element(by.css(".toggle"));
+    }
+
 
 
 
