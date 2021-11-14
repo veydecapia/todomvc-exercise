@@ -139,11 +139,9 @@ describe('TodoMVC Test', () => {
 
         it('Should mark all items as complete', async () => {
             //Arrange: Add items
-            todo.forEach( async (item) => {
-                await browser.sleep(2000);
-
+            for await (const item of todo) {
                 await page.addTodoListItem(item);
-            });
+            }
 
             //Act
             await click(page.toggleAll());
@@ -185,7 +183,7 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should toggle all is not displayed', async () => {
-            expect(await page.toggleAll().isDisplayed()).toBe(true);
+            expect(await page.toggleAll().isDisplayed()).toBe(false);
         });
 
         xit('Should have zero number of todos in local storage', () => {
