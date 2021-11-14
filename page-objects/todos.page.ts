@@ -107,7 +107,7 @@ export class TodosPage {
             .perform();
     }
 
-    
+
     performItemsCleanUp = async (): Promise<boolean> => {
         try {
             while(await this.items(0).isDisplayed()) {
@@ -115,6 +115,7 @@ export class TodosPage {
                 await click(this.deleteItemBtn(0));
             }
         } catch (error) {
+            await waitForAjax();
             return true;
         }
     }

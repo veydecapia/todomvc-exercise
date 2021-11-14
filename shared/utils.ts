@@ -134,9 +134,8 @@ export function sleep(
 
 export const waitForAjax = async ()
 : Promise<void> => {
-    const request = env.PROD.requestURL;
-
-    console.log("Request: " + request);
+    // const request = env.PROD.requestURL;
+    // console.log("Request: " + request);
 
     browser.executeAsyncScript(function() {
             var callback = arguments[arguments.length - 1];
@@ -149,6 +148,6 @@ export const waitForAjax = async ()
                     };
                     xhr.send('');
                 }).then( (str: any) => {
-                console.log("item name: " + str);
+                // console.log("item name: " + str);
             });
 }
