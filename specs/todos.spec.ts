@@ -88,6 +88,7 @@ describe('TodoMVC Test', () => {
                 });
      
                 it('Should have correct number of todos in local storage', async () => {
+                    await waitForAjax();
                     expect(await getLocalStorage()).toBe(itemCount);
                 });
 
@@ -174,6 +175,7 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should have zero number of todos in local storage', async () => {
+            await waitForAjax();
             expect(await getLocalStorage()).toBe(0);
         });
 
@@ -236,6 +238,7 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should have correct number of todos in local storage', async() => {
+            await waitForAjax();
             expect(await getLocalStorage()).toBe(todo.length);
         });
 
@@ -303,6 +306,7 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should have correct number of todos in local storage', async () => {
+            await waitForAjax();
             expect(await getLocalStorage()).toBe(todo.length);
         });
 
