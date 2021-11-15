@@ -80,9 +80,7 @@ export class TodosPage {
     }
 
     allFilterLink(){
-        //TODO: Need to update to a more stable locator
         return element(by.linkText("All"));
-        // return element(by.css("#footer a[href='#/']"));
     }
 
 

@@ -2,7 +2,7 @@ import { TodosPage } from "../page-objects/todos.page";
 import { browser } from "protractor";
 import * as todo from "../test-data/todo.json";
 import { DEFAULT_TIMEOUT } from "../shared/config";
-import { click, waitForAjax } from "../shared/utils";
+import { click, sleep, waitForAjax } from "../shared/utils";
 import { protractor } from "protractor/built/ptor";
 import { fail } from "assert";
 
@@ -240,6 +240,7 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should have correct todo items left', async () => {
+            await waitForAjax();
             expect((await page.itemsCount()).toString())
                     .toBe(await page.todoCountLbl().getText());
         });
@@ -450,26 +451,7 @@ describe('TodoMVC Test', () => {
 
     });
 
-
-    xdescribe('Todo item count', () => {
-        
-        beforeAll( async () => {
-            page.beforeAll();
-        });
-
-        afterAll(() => {
-            //Perform cleanup. Clear any added items in the list.
-            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
-        });
-
-        //TODO: To remove, already covered in add new todo and mark as complete scenarios
-        it('Should display correct number of todo items', () => {
-            
-        });
-
-    });
-
-    fdescribe('Todo list filtering', () => {
+    describe('Todo list filtering', () => {
 
         beforeAll( async () => {
             page.beforeAll();
@@ -481,6 +463,12 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should All filter be the default', async () => {
+            //Arrange: Add items
+            for await (const item of todo) {
+                await page.addTodoListItem(item);
+            }
+
+            //Assert
             expect(await page.allFilterLink().getAttribute('class')).toBe('selected');
         });
 
@@ -489,11 +477,6 @@ describe('TodoMVC Test', () => {
         let assertCount = todo.length;
 
         it('Should display Active items', async () => {
-            //Arrange: Add items
-            for await (const item of todo) {
-                await page.addTodoListItem(item);
-            }
-
             //Act: Click active filter
             await click(page.activeFilterLink());
 
@@ -526,6 +509,7 @@ describe('TodoMVC Test', () => {
             
             //Act
             await click(page.allFilterLink());
+            await waitForAjax();
 
             //Assert
             expect(await page.allFilterLink().getAttribute('class')).toBe('selected');
@@ -543,6 +527,7 @@ describe('TodoMVC Test', () => {
         it('Should display correct filter on browser reload', async () => {
             //Act
             browser.refresh();
+            await waitForAjax();
 
             //Assert
             expect(await page.completedFilterLink().getAttribute('class')).toBe('selected');
@@ -558,7 +543,7 @@ describe('TodoMVC Test', () => {
     });
 
 
-    describe('Clear completed', () => {
+    xdescribe('Clear completed', () => {
 
         it('Should remove completed items', () => {
             
@@ -567,6 +552,25 @@ describe('TodoMVC Test', () => {
         it('Should be hidden for no items completed', () => {
             
         });
+    });
+
+    
+    xdescribe('Todo item count', () => {
+        
+        beforeAll( async () => {
+            page.beforeAll();
+        });
+
+        afterAll(() => {
+            //Perform cleanup. Clear any added items in the list.
+            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
+        });
+
+        //TODO: To remove, already covered in add new todo and mark as complete scenarios
+        it('Should display correct number of todo items', () => {
+            
+        });
+
     });
 
     //TODO: Data Persistence

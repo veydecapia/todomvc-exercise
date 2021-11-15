@@ -2,7 +2,6 @@ import { browser, ElementFinder, element, Locator } from "protractor"
 import { DEFAULT_TIMEOUT, DEFAULT_RETRIES } from "./config"
 import * as webdriver from 'selenium-webdriver';
 import { protractor } from "protractor/built/ptor";
-import * as env from "../shared/constants/environment-properties.json";
 
 
 
@@ -53,19 +52,15 @@ export function click(
         .then(() => e.click())
         .then(
             () => {},
-            // tslint:disable-next-line:no-any
             (error: any) => {
                 if (tryCount > 0) {
-                    // tslint:disable-next-line:no-console
                     console.log(`Click error: ${error}`);
-                    // tslint:disable-next-line:no-console
                     console.log(
                         `Click retry ${tryCount} on target ${e.locator()}`
                     );
                     tryCount = tryCount - 1;
                     return click(target, timeout, tryCount);
                 } else {
-                    // tslint:disable-next-line:no-console
                     console.error(`Error while clicking on ${e.locator()}`);
                     throw error;
                 }
