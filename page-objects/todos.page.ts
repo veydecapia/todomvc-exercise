@@ -45,6 +45,16 @@ export class TodosPage {
         return await this.todoList().all(by.css("li")).count();
     }
 
+    itemsCompleteCount = async (): Promise<number> =>{
+        return await this.todoList().all(by.css("li.completed")).count();
+    }
+
+    itemsActiveCount = async (): Promise<number> =>{
+        return await this.todoList().all(by.css("li:not(.completed.hidden)")).count();
+    }
+
+    
+
     itemsLbl(index: number){
         return this.items(index).element(by.css("label"));
     }
@@ -60,6 +70,21 @@ export class TodosPage {
     editTextbox(index: number){
         return this.items(index).element(by.css(".edit"));
     }
+
+    activeFilterLink(){
+        return element(by.linkText("Active"));
+    }
+
+    completedFilterLink(){
+        return element(by.linkText("Completed"));
+    }
+
+    allFilterLink(){
+        //TODO: Need to update to a more stable locator
+        return element(by.linkText("All"));
+        // return element(by.css("#footer a[href='#/']"));
+    }
+
 
 
 
@@ -119,6 +144,7 @@ export class TodosPage {
             return true;
         }
     }
+
 
     beforeAll = async (): Promise<void> => {
         browser.waitForAngularEnabled(false); //For non angular apps

@@ -5,7 +5,6 @@ import { DEFAULT_TIMEOUT } from "../shared/config";
 import { click, waitForAjax } from "../shared/utils";
 import { protractor } from "protractor/built/ptor";
 import { fail } from "assert";
-import { BrowserStack } from "protractor/built/driverProviders";
 
 
 
@@ -86,11 +85,6 @@ describe('TodoMVC Test', () => {
                 it('Should label contains ' + item + ' & appends to the bottom of the list', async () => {
                     expect(await page.itemsLbl(index).getText()).toBe(item);
                 }); 
-                
-                //Already covered by previous it block
-                xit('Should append one item to the bottom of the list', () => {
-                    
-                });
      
                 it('Should the text input field be blank/cleared', async () => {
                     expect(await page.newTodoTextbox().getText()).toBe("");
@@ -171,6 +165,8 @@ describe('TodoMVC Test', () => {
             //Act
             await click(page.clearCompletedBtn());
 
+            await waitForAjax();
+
             //Assert
 
             //Fresh state
@@ -224,7 +220,6 @@ describe('TodoMVC Test', () => {
             
             /**
              * Assert for negative of the below
-             * All items have Strike through text (class destroy)
              * All items is checked (class completed)
              * 0 items left (todo-count) / correct # of items left is displayed
              * Clear completed is displayed
@@ -326,7 +321,7 @@ describe('TodoMVC Test', () => {
     });
 
 
-    fdescribe('Edit a todo item', () => {
+    describe('Edit a todo item', () => {
 
         beforeAll( async () => {
             page.beforeAll();
@@ -456,15 +451,15 @@ describe('TodoMVC Test', () => {
     });
 
 
-    describe('Todo item count', () => {
+    xdescribe('Todo item count', () => {
         
-        beforeAll(() => {
-            //Make sure no items stored in local storage.
-            //Clear any previous added items if there are any
+        beforeAll( async () => {
+            page.beforeAll();
         });
 
         afterAll(() => {
             //Perform cleanup. Clear any added items in the list.
+            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
         });
 
         //TODO: To remove, already covered in add new todo and mark as complete scenarios
@@ -474,31 +469,67 @@ describe('TodoMVC Test', () => {
 
     });
 
-    describe('Todo list filtering', () => {
+    fdescribe('Todo list filtering', () => {
 
-        beforeAll(() => {
-            //Make sure no items stored in local storage.
-            //Clear any previous added items if there are any
+        beforeAll( async () => {
+            page.beforeAll();
         });
 
         afterAll(() => {
             //Perform cleanup. Clear any added items in the list.
+            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
+        });
+
+        it('Should All filter be the default', async () => {
+            expect(await page.allFilterLink().getAttribute('class')).toBe('selected');
         });
 
 
-        it('Should display Active items', () => {
+        const itemToComplete = 0; //index of the item to be completed
+        let assertCount = todo.length;
+
+        it('Should display Active items', async () => {
             //Arrange: Add items
-            //Complete at least 1 item
+            for await (const item of todo) {
+                await page.addTodoListItem(item);
+            }
+
+            //Act: Click active filter
+            await click(page.activeFilterLink());
+
+            //Assert
+            expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
+            expect(await page.activeFilterLink().getAttribute('class')).toBe('selected');
+
+            //Act: Complete at least 1 item
+            await click(page.markAsCompleteChkbox(itemToComplete)); //Complete row 1
+    
+            //Assert
+            assertCount = assertCount - 1;
+            expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
+            expect(await page.itemsLbl(itemToComplete).getText()).not.toBe(todo[itemToComplete]); //Verify if the item is removed
+            expect(await page.itemsActiveCount()).toBe(2);
+        });
+
+        it('Should display Completed items', async () => {
+            //Act
+            await click(page.completedFilterLink());
+
+            //Assert
+            expect(await page.completedFilterLink().getAttribute('class')).toBe('selected');
+            expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
+            expect(await page.itemsLbl(itemToComplete).getText()).toBe(todo[itemToComplete]);
+            expect(await page.itemsCompleteCount()).toBe(1);
+        });
+
+        it('Should display All items', async () => {
             
-            //Highlight current filter
-        });
+            //Act
+            await click(page.allFilterLink());
 
-        it('Should display Completed items', () => {
-            //Highlight current filter
-        });
-
-        it('Should display All items', () => {
-            //Highlight current filter
+            //Assert
+            expect(await page.allFilterLink().getAttribute('class')).toBe('selected');
+            expect(await page.itemsCount()).toBe(todo.length);
         });
 
         it('Should display previous filter on browser back', () => {
@@ -510,6 +541,18 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should display correct filter on browser forward', () => {
+            
+        });
+    });
+
+
+    describe('Clear completed', () => {
+
+        it('Should remove completed items', () => {
+            
+        });
+
+        it('Should be hidden for no items completed', () => {
             
         });
     });
