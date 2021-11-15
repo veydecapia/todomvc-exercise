@@ -146,3 +146,23 @@ export const waitForAjax = async ()
                 // console.log("item name: " + str);
             });
 }
+
+
+export const getLocalStorage = async ()
+: Promise<number> => {
+    return browser.executeAsyncScript(function() {
+            var callback = arguments[arguments.length - 1];
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", "https://todo-backend-django.herokuapp.com/", true);
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState == 4) {
+                        callback(xhr.responseText);
+                        }
+                    };
+                    xhr.send('');
+                }).then( (item: any) => {
+                // console.log(item);
+                let count = JSON.parse(item).length;
+                return count;
+            });
+}

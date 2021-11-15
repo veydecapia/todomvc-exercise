@@ -2,7 +2,7 @@ import { TodosPage } from "../page-objects/todos.page";
 import { browser } from "protractor";
 import * as todo from "../test-data/todo.json";
 import { DEFAULT_TIMEOUT } from "../shared/config";
-import { click, sleep, waitForAjax } from "../shared/utils";
+import { click, getLocalStorage, sleep, waitForAjax } from "../shared/utils";
 import { protractor } from "protractor/built/ptor";
 import { fail } from "assert";
 
@@ -23,32 +23,15 @@ describe('TodoMVC Test', () => {
             expect(await page.todoList().isDisplayed()).not.toBe(true);
         });
 
-
         //TODO: Need to find a way on how to test for element active
         xit('Should focus on the todo input textbox', async () => {
             // expect((await page.newTodoTextbox()).getWebElement()).toEqual(browser.driver.switchTo().activeElement())
             // expect(page.newTodoTextbox()).tobeActive();
         });
 
-        xit('Should have zero number of todos in local storage', async () => {
-            
-            /**
-             * TODO: Get API request to fetch object value instead of session storage
-             * e.g.
-             * [{"title":"ITEM1","completed":false,"url":"https://todo-backend-django.herokuapp.com/1098",
-             * "order":1},
-             * {"title":"ITEM2","completed":false,"url":"https://todo-backend-django.herokuapp.com/1099","order":2},
-             * {"title":"item3","completed":false,"url":"https://todo-backend-django.herokuapp.com/1100","order":3}]
-             * https://todo-backend-django.herokuapp.com/#/
-             */
-            // const value = await browser.executeScript("return window.localStorage;");
-            // console.log(value);
-
-            // const test = await browser.executeScript("return window.location.search.substr(1);");
-            // console.log(test);
-
+        it('Should have zero number of todos in local storage', async () => {
+            expect(await getLocalStorage()).toBe(0);
         });
-
 
         it('Should not display main and footer', async () => {
             expect(await page.mainSection().isDisplayed()).not.toBe(true);
@@ -77,6 +60,7 @@ describe('TodoMVC Test', () => {
         //TODO: Data driven test, use for each loop to go through todo items
         todo.forEach( async (item, index) => {
             describe('Todo Item: ' + item, () => {
+                let itemCount  = index + 1;
 
                 beforeAll( async () => {
                     await page.addTodoListItem(item);
@@ -91,7 +75,6 @@ describe('TodoMVC Test', () => {
                 });
      
                 it('Should add one items left', async () => {
-                    let itemCount  = index + 1;
                     expect(await page.todoCountLbl().getText()).toBe(itemCount.toString());
                 });
      
@@ -100,8 +83,8 @@ describe('TodoMVC Test', () => {
                     expect(await page.footerSection().isDisplayed()).toBe(true);
                 });
      
-                xit('Should have correct number of todos in local storage', () => {
-                    
+                it('Should have correct number of todos in local storage', async () => {
+                    expect(await getLocalStorage()).toBe(itemCount);
                 });
 
              });
@@ -185,8 +168,8 @@ describe('TodoMVC Test', () => {
             expect(await page.toggleAll().isDisplayed()).not.toBe(true);
         });
 
-        xit('Should have zero number of todos in local storage', () => {
-            
+        it('Should have zero number of todos in local storage', async () => {
+            expect(await getLocalStorage()).toBe(0);
         });
 
         
@@ -245,8 +228,8 @@ describe('TodoMVC Test', () => {
                     .toBe(await page.todoCountLbl().getText());
         });
 
-        xit('Should have correct number of todos in local storage', () => {
-            
+        it('Should have correct number of todos in local storage', async() => {
+            expect(await getLocalStorage()).toBe(todo.length);
         });
 
 
@@ -312,10 +295,8 @@ describe('TodoMVC Test', () => {
             expect(await page.items(1).getAttribute("class")).toBe("completed");
         });
 
-
-        //TODO: Create a function for checking local storage
-        xit('Should have correct number of todos in local storage', () => {
-            
+        it('Should have correct number of todos in local storage', async () => {
+            expect(await getLocalStorage()).toBe(todo.length);
         });
 
 
@@ -332,6 +313,8 @@ describe('TodoMVC Test', () => {
             //Perform cleanup. Clear any added items in the list.
             browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
         });
+
+        let assertCount = 0;
         
         it('Should edit an item', async () => {
             //Arrange: Add items
@@ -429,9 +412,9 @@ describe('TodoMVC Test', () => {
             await waitForAjax();
 
             //Assert
-            let assertCount = count - 1;
+            assertCount = count - 1;
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
-            //getNumber of Todos in Local Storage
+            expect(await getLocalStorage()).toBe(assertCount);
         });
 
         it('Should cancel edit on escape', async () => {
@@ -446,7 +429,7 @@ describe('TodoMVC Test', () => {
 
             //Assert
             expect(await page.itemsLbl(0).getText()).not.toBe(editedText);
-            //getNumber of Todos in Local Storage
+            expect(await getLocalStorage()).toBe(assertCount);
         });
 
     });
