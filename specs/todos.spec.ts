@@ -76,6 +76,7 @@ describe('TodoMVC Test', () => {
                 });
      
                 it('Should add one items left', async () => {
+                    browser.wait(protractor.ExpectedConditions.visibilityOf(page.todoCountLbl()));
                     expect(await page.todoCountLbl().getText()).toBe(itemCount.toString());
                 });
      
