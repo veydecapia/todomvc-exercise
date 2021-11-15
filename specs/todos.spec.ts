@@ -11,6 +11,8 @@ import { fail } from "assert";
 describe('TodoMVC Test', () => {
     let page: TodosPage;
     page = new TodosPage();
+
+    const EC = protractor.ExpectedConditions;
     
     describe('Go to Todo website', () => {
 
@@ -76,7 +78,7 @@ describe('TodoMVC Test', () => {
                 });
      
                 it('Should add one items left', async () => {
-                    browser.wait(protractor.ExpectedConditions.visibilityOf(page.todoCountLbl()));
+                    browser.wait(EC.presenceOf(page.todoCountLbl()));
                     expect(await page.todoCountLbl().getText()).toBe(itemCount.toString());
                 });
      
@@ -141,6 +143,7 @@ describe('TodoMVC Test', () => {
                 expect(await page.items(i).getAttribute('class')).toBe('completed');
             }
 
+            browser.wait(EC.presenceOf(page.todoCountLbl()));
             expect(await page.todoCountLbl().getText()).toBe('0');
             expect(await page.clearCompletedBtn().isDisplayed()).toBe(true);
 
@@ -215,17 +218,19 @@ describe('TodoMVC Test', () => {
                 expect(await page.items(i).getAttribute('class')).not.toBe('completed');
             }
 
+            browser.wait(EC.presenceOf(page.todoCountLbl()));
             expect(await page.todoCountLbl().getText()).not.toBe('0');
         });
 
         it('Should clear completed is not displayed', async () => {
-            if(!protractor.ExpectedConditions.invisibilityOf(page.clearCompletedBtn())){
+            if(!EC.invisibilityOf(page.clearCompletedBtn())){
                 fail("Clear completed button still visible.");
             }
         });
 
         it('Should have correct todo items left', async () => {
-            await waitForAjax();
+            browser.wait(EC.presenceOf(page.items(0)));
+            browser.wait(EC.presenceOf(page.todoCountLbl()));
             expect((await page.itemsCount()).toString())
                     .toBe(await page.todoCountLbl().getText());
         });
@@ -349,11 +354,11 @@ describe('TodoMVC Test', () => {
              * class contain focus-visible
              */
 
-             if(!protractor.ExpectedConditions.invisibilityOf(page.markAsCompleteChkbox(0))){
+             if(!EC.invisibilityOf(page.markAsCompleteChkbox(0))){
                 fail("Mark as complete checkbox control still visible.");
             }
 
-            if(!protractor.ExpectedConditions.invisibilityOf(page.deleteItemBtn(0))){
+            if(!EC.invisibilityOf(page.deleteItemBtn(0))){
                 fail("Mark as complete checkbox control still visible.");
             }
 
@@ -415,6 +420,7 @@ describe('TodoMVC Test', () => {
 
             //Assert
             assertCount = count - 1;
+            browser.wait(EC.presenceOf(page.todoCountLbl()));
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await getLocalStorage()).toBe(assertCount);
         });
@@ -466,6 +472,7 @@ describe('TodoMVC Test', () => {
             await click(page.activeFilterLink());
 
             //Assert
+            browser.wait(EC.presenceOf(page.todoCountLbl()));
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await page.activeFilterLink().getAttribute('class')).toBe('selected');
 
@@ -474,6 +481,7 @@ describe('TodoMVC Test', () => {
     
             //Assert
             assertCount = assertCount - 1;
+            browser.wait(EC.presenceOf(page.todoCountLbl()));
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await page.itemsLbl(itemToComplete).getText()).not.toBe(todo[itemToComplete]); //Verify if the item is removed
             expect(await page.itemsActiveCount()).toBe(2);
@@ -484,6 +492,7 @@ describe('TodoMVC Test', () => {
             await click(page.completedFilterLink());
 
             //Assert
+            browser.wait(EC.presenceOf(page.todoCountLbl()));
             expect(await page.completedFilterLink().getAttribute('class')).toBe('selected');
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await page.itemsLbl(itemToComplete).getText()).toBe(todo[itemToComplete]);
@@ -515,7 +524,6 @@ describe('TodoMVC Test', () => {
             browser.waitForAngularEnabled(false);
             browser.refresh();
             
-            let EC = protractor.ExpectedConditions
             browser.wait(
                 EC.titleIs("Todo-Backend client"),
                 DEFAULT_TIMEOUT
