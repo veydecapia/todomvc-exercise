@@ -532,16 +532,28 @@ describe('TodoMVC Test', () => {
             expect(await page.itemsCount()).toBe(todo.length);
         });
 
-        it('Should display previous filter on browser back', () => {
-            
+        it('Should display previous filter on browser back', async () => {
+            //Act
+            browser.navigate().back();
+
+            //Assert
+            expect(await page.completedFilterLink().getAttribute('class')).toBe('selected');
         });
 
-        it('Should display correct filter on browser reload', () => {
-            
+        it('Should display correct filter on browser reload', async () => {
+            //Act
+            browser.refresh();
+
+            //Assert
+            expect(await page.completedFilterLink().getAttribute('class')).toBe('selected');
         });
 
-        it('Should display correct filter on browser forward', () => {
-            
+        it('Should display correct filter on browser forward', async () => {
+            //Act
+            browser.navigate().forward();
+
+            //Assert
+            expect(await page.allFilterLink().getAttribute('class')).toBe('selected');
         });
     });
 
