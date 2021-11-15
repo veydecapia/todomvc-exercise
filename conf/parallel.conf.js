@@ -11,12 +11,14 @@ exports.config = {
     'browserstack.debug': 'true',
     'browserName': 'Chrome'
   },
-  'multiCapabilities': [{
+  'multiCapabilities': [
+  {
     "browser": "chrome",
     "browser_version": "95.0",
     "os": "Windows",
     "os_version": "10"
-  },{
+  }
+  ,{
     "browser": "firefox",
     "browser_version": "94.0",
     "os": "Windows",
@@ -26,7 +28,19 @@ exports.config = {
     "browser_version": "14.0",
     "os" : "OS X",
     "os_Version" : "Big Sur",
-  }],
+  },{
+    "os_version" : "10.0",
+    "device" : "Samsung Galaxy S20",
+    "real_mobile" : "true",
+    "browserName" : "Android"
+  },{
+    "os_version" : "14",
+    "device" : "iPhone 12 Pro Max",
+    "real_mobile" : "true",
+    "browserName" : "iPhone"
+    }
+
+  ],
   onPrepare() {
     //global test set-up goes here
    require('ts-node').register({

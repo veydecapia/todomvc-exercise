@@ -15,27 +15,34 @@ const reporter = new HtmlReporter({
 });
 
 const { SpecReporter } = require('jasmine-spec-reporter');
+
+const chromeCapability = {
+    browserName: "chrome",
+    shardTestFiles: true, // Allows different specs to run in parallel
+    maxInstances: 2, // Sets max number of browser instances that can run in parallel for this set of capabilities.
+    'chromeOptions': {
+        'args' : [
+            'start-maximized',
+            'disable-extensions',
+            'incognito',
+            'disable-gpu',
+            'disable-infobars',
+            'ignore-certificate-errors'
+        ]
+    }
+}
+
+
+
 exports.config = {
     framework: 'jasmine2', //Type of Framework used 
     directConnect:true, 
     specs: [   //Name of the Specfile
         '../specs/todos.spec.ts'
     ],
-    multiCapabilities: [{
-        browserName: "chrome",
-        shardTestFiles: true, // Allows different specs to run in parallel
-        maxInstances: 2, // Sets max number of browser instances that can run in parallel for this set of capabilities.
-        'chromeOptions': {
-            'args' : [
-                'start-maximized',
-                'disable-extensions',
-                'incognito',
-                'disable-gpu',
-                'disable-infobars',
-                'ignore-certificate-errors'
-            ]
-        }
-    }],
+    multiCapabilities: [
+        chromeCapability
+    ],
     // noGlobals: false,
     jasmineNodeOpts: {
         onComplete: null,
