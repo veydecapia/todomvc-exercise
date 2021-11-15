@@ -542,37 +542,6 @@ describe('TodoMVC Test', () => {
         });
     });
 
-
-    xdescribe('Clear completed', () => {
-
-        it('Should remove completed items', () => {
-            
-        });
-
-        it('Should be hidden for no items completed', () => {
-            
-        });
-    });
-
-    
-    xdescribe('Todo item count', () => {
-        
-        beforeAll( async () => {
-            page.beforeAll();
-        });
-
-        afterAll(() => {
-            //Perform cleanup. Clear any added items in the list.
-            browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
-        });
-
-        //TODO: To remove, already covered in add new todo and mark as complete scenarios
-        it('Should display correct number of todo items', () => {
-            
-        });
-
-    });
-
     //TODO: Data Persistence
 
 
