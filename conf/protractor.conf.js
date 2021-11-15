@@ -19,10 +19,10 @@ exports.config = {
     framework: 'jasmine2', //Type of Framework used 
     directConnect:true, 
     specs: [   //Name of the Specfile
-        './specs/todos.spec.ts'
+        '../specs/todos.spec.ts'
     ],
     multiCapabilities: [{
-        browserName: 'chrome',   
+        browserName: "chrome",
         shardTestFiles: true, // Allows different specs to run in parallel
         maxInstances: 2, // Sets max number of browser instances that can run in parallel for this set of capabilities.
         'chromeOptions': {
@@ -35,8 +35,7 @@ exports.config = {
                 'ignore-certificate-errors'
             ]
         }
-    }
-    ],
+    }],
     // noGlobals: false,
     jasmineNodeOpts: {
         onComplete: null,
@@ -51,11 +50,11 @@ exports.config = {
        jasmine.getEnv().addReporter(new SpecReporter({ spec: { displayStacktrace: 'pretty' }}));
        jasmine.getEnv().addReporter(reporter.getJasmine2Reporter());
        require('ts-node').register({
-        project: require('path').join(__dirname, './tsconfig.json') // Relative path of tsconfig.json file 
+        project: require('path').join(__dirname, '../tsconfig.json') // Relative path of tsconfig.json file 
       });
       
     },
     suites : {
 
     },
-};
+    }
