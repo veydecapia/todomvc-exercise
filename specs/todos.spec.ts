@@ -30,6 +30,7 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should have zero number of todos in local storage', async () => {
+            await waitForAjax();
             expect(await getLocalStorage()).toBe(0);
         });
 
@@ -507,12 +508,26 @@ describe('TodoMVC Test', () => {
             expect(await page.completedFilterLink().getAttribute('class')).toBe('selected');
         });
 
-        it('Should display correct filter on browser reload', async () => {
+
+        it('Should display correct filter on browser reload - Data Persistence', async () => {
             //Act
+            browser.waitForAngularEnabled(false);
             browser.refresh();
+            
+            let EC = protractor.ExpectedConditions
+            browser.wait(
+                EC.titleIs("Todo-Backend client"),
+                DEFAULT_TIMEOUT
+            );
+    
+            //Wait for ajax call to finish
             await waitForAjax();
 
+            browser.wait(EC.elementToBeClickable(page.completedFilterLink()));
+
             //Assert
+            expect(await page.itemsCount()).toBe(todo.length);
+            expect(await page.itemsCompleteCount()).toBe(1);
             expect(await page.completedFilterLink().getAttribute('class')).toBe('selected');
         });
 
@@ -524,9 +539,4 @@ describe('TodoMVC Test', () => {
             expect(await page.allFilterLink().getAttribute('class')).toBe('selected');
         });
     });
-
-    //TODO: Data Persistence
-
-
-    
 })
