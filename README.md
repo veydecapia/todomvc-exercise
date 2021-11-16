@@ -130,7 +130,7 @@ This will run the automated test that covers the following test scenarios: <br/>
 ```
 <br/><br/>
 4. After the test, go to **reports\testResults** folder.<br/>
-  You should see a HTML Test Report, *SalesChampAutomationReport.html*. Open and see the summary result.<br/><br/>
+  You should see a HTML Test Report, *TodoMVCAutomationReport.html*. Open and see the summary result.<br/><br/>
   
   ![sample report](https://user-images.githubusercontent.com/6094567/141874826-1781dc44-e06a-44f4-a344-d8ce6a0bf6aa.png)
   
