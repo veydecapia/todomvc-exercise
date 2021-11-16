@@ -151,8 +151,8 @@ Steps on Running using Browserstack
 2. Add the following details in the file. Copy your username and access key. 
    *Click [here](https://www.browserstack.com/docs/automate/selenium/reset-access-key) for reference on accessing your browserstack keys.*
    ```sh
-   BROWSERSTACK_USERNAME=
-   BROWSERSTACK_ACCESS_KEY=
+   BROWSERSTACK_USERNAME=<insert username here>
+   BROWSERSTACK_ACCESS_KEY=<insert access key here>
    ```
    
 3. Run npm run parallel
