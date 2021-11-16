@@ -20,8 +20,8 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#scenarios-and-test-cases">Scenarios and Test Cases</a></li>
     <li><a href="#tools-used-and-why">Tools Used and Why</a></li>
+    <li><a href="#scenarios-and-test-cases">Scenarios and Test Cases</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
