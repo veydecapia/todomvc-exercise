@@ -25,10 +25,11 @@ describe('TodoMVC Test', () => {
             expect(await page.todoList().isDisplayed()).not.toBe(true);
         });
 
-        //TODO: Need to find a way on how to test for element active
-        xit('Should focus on the todo input textbox', async () => {
-            // expect((await page.newTodoTextbox()).getWebElement()).toEqual(browser.driver.switchTo().activeElement())
-            // expect(page.newTodoTextbox()).tobeActive();
+        it('Should focus on the todo input textbox', async () => {
+            const pageElement = await page.newTodoTextbox().getWebElement().getId();
+            const activeElement = await browser.driver.switchTo().activeElement().getId();
+            
+            expect(activeElement).toEqual(pageElement);
         });
 
         it('Should have zero number of todos in local storage', async () => {
@@ -60,7 +61,7 @@ describe('TodoMVC Test', () => {
             browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
         });
 
-        //TODO: Data driven test, use for each loop to go through todo items
+        //*Data driven test, uses for each loop to go through todo items
         todo.forEach( async (item, index) => {
             describe('Todo Item: ' + item, () => {
                 let itemCount  = index + 1;
@@ -78,7 +79,7 @@ describe('TodoMVC Test', () => {
                 });
      
                 it('Should add one items left', async () => {
-                    browser.wait(EC.presenceOf(page.todoCountLbl()));
+                    browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
                     expect(await page.todoCountLbl().getText()).toBe(itemCount.toString());
                 });
      
@@ -144,7 +145,7 @@ describe('TodoMVC Test', () => {
                 expect(await page.items(i).getAttribute('class')).toBe('completed');
             }
 
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.todoCountLbl().getText()).toBe('0');
             expect(await page.clearCompletedBtn().isDisplayed()).toBe(true);
 
@@ -153,7 +154,6 @@ describe('TodoMVC Test', () => {
         it('Should clear completed items in the list', async () => {
             //Act
             await click(page.clearCompletedBtn());
-
             await waitForAjax();
 
             //Assert
@@ -220,19 +220,17 @@ describe('TodoMVC Test', () => {
                 expect(await page.items(i).getAttribute('class')).not.toBe('completed');
             }
 
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.todoCountLbl().getText()).not.toBe('0');
         });
 
         it('Should clear completed is not displayed', async () => {
-            if(!EC.invisibilityOf(page.clearCompletedBtn())){
-                fail("Clear completed button still visible.");
-            }
+            expect(await page.clearCompletedBtn().isPresent()).toBe(false);
         });
 
         it('Should have correct todo items left', async () => {
-            browser.wait(EC.presenceOf(page.items(0)));
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.items(0)), DEFAULT_TIMEOUT);
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect((await page.itemsCount()).toString())
                     .toBe(await page.todoCountLbl().getText());
         });
@@ -285,7 +283,7 @@ describe('TodoMVC Test', () => {
             //Assert
             /**
              * Item 1 should be checked
-             * Item 2 should not be checked
+             * Item 2 should be checked
              */
 
             expect(await page.items(0).getAttribute("class")).toBe("completed");
@@ -299,8 +297,8 @@ describe('TodoMVC Test', () => {
 
             //Assert
             /**
-             * Item 1 should be checked
-             * Item 2 should not be checked
+             * Item 1 should not be checked
+             * Item 2 should be checked
              */
 
             expect(await page.items(0).getAttribute("class")).not.toBe("completed");
@@ -400,7 +398,7 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should trim input text', async () => {
-            const editedText = "      EDITED ITEM 1 WITH TRAILING SPACES     ";
+            const editedText = "      EDITED ITEM 1 WITH SPACES     ";
 
             //Act: Edit item 1
             await page.editTodoListItem(0, editedText);
@@ -409,7 +407,7 @@ describe('TodoMVC Test', () => {
             await waitForAjax();
 
             //Assert
-            expect(await page.itemsLbl(0).getText()).toBe("EDITED ITEM 1 WITH TRAILING SPACES");
+            expect(await page.itemsLbl(0).getText()).toBe(editedText.trim());
         });
 
         it('Should remove the item if input text is empty', async () => {
@@ -426,7 +424,7 @@ describe('TodoMVC Test', () => {
 
             //Assert
             assertCount = count - 1;
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await getLocalStorage()).toBe(assertCount);
         });
@@ -478,7 +476,7 @@ describe('TodoMVC Test', () => {
             await click(page.activeFilterLink());
 
             //Assert
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await page.activeFilterLink().getAttribute('class')).toBe('selected');
 
@@ -487,7 +485,7 @@ describe('TodoMVC Test', () => {
     
             //Assert
             assertCount = assertCount - 1;
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await page.itemsLbl(itemToComplete).getText()).not.toBe(todo[itemToComplete]); //Verify if the item is removed
             expect(await page.itemsActiveCount()).toBe(2);
@@ -498,7 +496,7 @@ describe('TodoMVC Test', () => {
             await click(page.completedFilterLink());
 
             //Assert
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.completedFilterLink().getAttribute('class')).toBe('selected');
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await page.itemsLbl(itemToComplete).getText()).toBe(todo[itemToComplete]);
@@ -538,7 +536,10 @@ describe('TodoMVC Test', () => {
             //Wait for ajax call to finish
             await waitForAjax();
 
-            browser.wait(EC.elementToBeClickable(page.completedFilterLink()));
+            browser.wait(
+                        EC.elementToBeClickable(page.completedFilterLink()),
+                        DEFAULT_TIMEOUT
+                        );
 
             //Assert
             expect(await page.itemsCount()).toBe(todo.length);

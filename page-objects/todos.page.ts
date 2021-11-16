@@ -150,5 +150,8 @@ export class TodosPage {
 
         //Perform cleanup. Clear any added items in the list.
         browser.wait(this.performItemsCleanUp(), DEFAULT_TIMEOUT);
+
+        //Wait for ajax call to finish
+        await waitForAjax();
     }
 }

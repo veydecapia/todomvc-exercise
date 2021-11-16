@@ -27,7 +27,11 @@ const chromeCapability = {
             'incognito',
             'disable-gpu',
             'disable-infobars',
-            'ignore-certificate-errors'
+            'ignore-certificate-errors',
+
+            'headless',
+            'no-sandbox',
+            'window-size=1280,720'
         ]
     }
 }
