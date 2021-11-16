@@ -102,8 +102,7 @@ Note: to download the latest version of npm, on the command line, run the follow
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-1. To run the created Automated test.
-Run npm
+1. To run the created Automated test. Run npm
    ```sh
    npm test
    ```
@@ -142,6 +141,65 @@ This will run the automated test that covers the following test scenarios: <br/>
   ![image](https://user-images.githubusercontent.com/6094567/141875024-e65b6a9a-14c6-42a4-8fbb-9123d615e054.png)
  
   Sample generated report for reference: [reports.zip](https://github.com/veydecapia/todomvc-exercise/files/7542445/reports.zip)
+
+
+### Running using Browserstack
+The project is also designed to run using browserstack testing service. This means that the project can also run against mobile browsers and can do cross browser testing for different operating system and devices.
+
+Steps on Running using Browserstack
+1. Create a *'.env'* file on the root folder.
+2. Add the following details in the file. Copy your username and access key. 
+   *Click [here](https://www.browserstack.com/docs/automate/selenium/reset-access-key) for reference on accessing your browserstack keys.*
+   ```sh
+   BROWSERSTACK_USERNAME=
+   BROWSERSTACK_ACCESS_KEY=
+   ```
+   
+3. Run npm run parallel
+   ```sh
+   npm run parallel
+   ```
+   
+4. You should see the following in console. Which means that the automated test is currently running
+![image](https://user-images.githubusercontent.com/6094567/141878269-cac13892-1508-416b-9fa5-4a9f0c7b0cf2.png)
+
+5. Go to your browserstack sessions/builds. You should see your test is now running. 
+
+   ![browserstack run](https://user-images.githubusercontent.com/6094567/141878454-e4a1c6e3-9b01-40de-82c4-db3c43032579.png)
+
+6. After the test is completed. You should see a link to your test results build.
+   ```sh
+   [Chrome #21] [09:21:00] I/browserstack - BrowserStack results available at https://automate.browserstack.com/builds/0cb4ebd211d90e5857091d4d1234b3c542cb6943/sessions/aa46732d72f406363bff9e2f1454dc713b7f7b93
+   ```
+   
+      ```sh
+      [09:21:02] I/testLogger -
+      [09:21:02] I/launcher - 0 instance(s) of WebDriver still running
+      [09:21:02] I/launcher - Chrome #11 passed
+      [09:21:02] I/launcher - Chrome #01 passed
+      [09:21:02] I/launcher - Android #31 passed
+      [09:21:02] I/launcher - iPhone #41 passed
+      [09:21:02] I/launcher - Chrome #21 passed
+   ```
+   
+
+### Updating Capabilities
+1. Go to parallel.conf.js under conf folder
+2. Update multiCapabilities object. Currently it is set to run the following browser, os, devices combinations.
+
+![image](https://user-images.githubusercontent.com/6094567/141879438-be38279f-e689-4b40-a861-7630b5fcf975.png)
+
+3. Click [here](https://www.browserstack.com/automate/capabilities) for reference on setting capabilities and choose NodeJS.
+
+Here are my sample browserstack run.
+| Browser/Device     | OS           | Browserstack link                                                                                                                                                                                               |
+|--------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Firefox 94.0       | Windows 10   | https://automate.browserstack.com/builds/0cb4ebd211d90e5857091d4d1234b3c542cb6943/sessions/170f094a3658ce3ca1244234afd7b16e9fa7693e?auth_token=77a0650ebe71a05f50fcefbc055fd7de21984e52a1ab5a876475fe981224f0c4 |
+| Chrome 95.0        | Windows 10   | https://automate.browserstack.com/builds/0cb4ebd211d90e5857091d4d1234b3c542cb6943/sessions/ddeefe04d3c765f208b51114cde7dd049e1ac1d3?auth_token=4119363f0bae818b6f67e97b51641d01c2999f0d407124733110c0b412da9ce2 |
+| Safari 14.1        | OS X Big Sur | https://automate.browserstack.com/builds/0cb4ebd211d90e5857091d4d1234b3c542cb6943/sessions/aa46732d72f406363bff9e2f1454dc713b7f7b93?auth_token=69155e60a744af9c6fd2127ea77085820fe972c6d741f5dc0387481c83e1197f |
+| Samsung Galaxy S20 | Android 10.0 | https://automate.browserstack.com/builds/0cb4ebd211d90e5857091d4d1234b3c542cb6943/sessions/7f19d13b969760335ff2ca31be603330b0fad25f?auth_token=081eb36e420ad54b3219d4cfd4f7697b790761d39d6fdede09fa836c1d62e32e |
+| iPhone 12 Pro Max  | iOS 14.2     | https://automate.browserstack.com/builds/0cb4ebd211d90e5857091d4d1234b3c542cb6943/sessions/0316d466cfbe384d4031367bc03ee954721b4d7e?auth_token=9bccb2c0b8568cb5995cf120845590eb57aab95d2e14d483a69b58d9607ce5aa |
+
 
 
 
