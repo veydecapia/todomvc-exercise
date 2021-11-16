@@ -60,7 +60,7 @@ describe('TodoMVC Test', () => {
             browser.wait(page.performItemsCleanUp(), DEFAULT_TIMEOUT);
         });
 
-        //TODO: Data driven test, use for each loop to go through todo items
+        //*Data driven test, uses for each loop to go through todo items
         todo.forEach( async (item, index) => {
             describe('Todo Item: ' + item, () => {
                 let itemCount  = index + 1;
@@ -153,7 +153,6 @@ describe('TodoMVC Test', () => {
         it('Should clear completed items in the list', async () => {
             //Act
             await click(page.clearCompletedBtn());
-
             await waitForAjax();
 
             //Assert
@@ -285,7 +284,7 @@ describe('TodoMVC Test', () => {
             //Assert
             /**
              * Item 1 should be checked
-             * Item 2 should not be checked
+             * Item 2 should be checked
              */
 
             expect(await page.items(0).getAttribute("class")).toBe("completed");
@@ -299,8 +298,8 @@ describe('TodoMVC Test', () => {
 
             //Assert
             /**
-             * Item 1 should be checked
-             * Item 2 should not be checked
+             * Item 1 should not be checked
+             * Item 2 should be checked
              */
 
             expect(await page.items(0).getAttribute("class")).not.toBe("completed");
