@@ -25,10 +25,11 @@ describe('TodoMVC Test', () => {
             expect(await page.todoList().isDisplayed()).not.toBe(true);
         });
 
-        //TODO: Need to find a way on how to test for element active
-        xit('Should focus on the todo input textbox', async () => {
-            // expect((await page.newTodoTextbox()).getWebElement()).toEqual(browser.driver.switchTo().activeElement())
-            // expect(page.newTodoTextbox()).tobeActive();
+        it('Should focus on the todo input textbox', async () => {
+            const pageElement = await page.newTodoTextbox().getWebElement().getId();
+            const activeElement = await browser.driver.switchTo().activeElement().getId();
+            
+            expect(activeElement).toEqual(pageElement);
         });
 
         it('Should have zero number of todos in local storage', async () => {
@@ -399,7 +400,7 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should trim input text', async () => {
-            const editedText = "      EDITED ITEM 1 WITH TRAILING SPACES     ";
+            const editedText = "      EDITED ITEM 1 WITH SPACES     ";
 
             //Act: Edit item 1
             await page.editTodoListItem(0, editedText);
@@ -408,7 +409,7 @@ describe('TodoMVC Test', () => {
             await waitForAjax();
 
             //Assert
-            expect(await page.itemsLbl(0).getText()).toBe("EDITED ITEM 1 WITH TRAILING SPACES");
+            expect(await page.itemsLbl(0).getText()).toBe(editedText.trim());
         });
 
         it('Should remove the item if input text is empty', async () => {
