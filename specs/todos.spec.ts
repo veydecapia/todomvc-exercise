@@ -79,7 +79,7 @@ describe('TodoMVC Test', () => {
                 });
      
                 it('Should add one items left', async () => {
-                    browser.wait(EC.presenceOf(page.todoCountLbl()));
+                    browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
                     expect(await page.todoCountLbl().getText()).toBe(itemCount.toString());
                 });
      
@@ -145,7 +145,7 @@ describe('TodoMVC Test', () => {
                 expect(await page.items(i).getAttribute('class')).toBe('completed');
             }
 
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.todoCountLbl().getText()).toBe('0');
             expect(await page.clearCompletedBtn().isDisplayed()).toBe(true);
 
@@ -220,7 +220,7 @@ describe('TodoMVC Test', () => {
                 expect(await page.items(i).getAttribute('class')).not.toBe('completed');
             }
 
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.todoCountLbl().getText()).not.toBe('0');
         });
 
@@ -229,8 +229,8 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should have correct todo items left', async () => {
-            browser.wait(EC.presenceOf(page.items(0)));
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.items(0)), DEFAULT_TIMEOUT);
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect((await page.itemsCount()).toString())
                     .toBe(await page.todoCountLbl().getText());
         });
@@ -424,7 +424,7 @@ describe('TodoMVC Test', () => {
 
             //Assert
             assertCount = count - 1;
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await getLocalStorage()).toBe(assertCount);
         });
@@ -476,7 +476,7 @@ describe('TodoMVC Test', () => {
             await click(page.activeFilterLink());
 
             //Assert
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await page.activeFilterLink().getAttribute('class')).toBe('selected');
 
@@ -485,7 +485,7 @@ describe('TodoMVC Test', () => {
     
             //Assert
             assertCount = assertCount - 1;
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await page.itemsLbl(itemToComplete).getText()).not.toBe(todo[itemToComplete]); //Verify if the item is removed
             expect(await page.itemsActiveCount()).toBe(2);
@@ -496,7 +496,7 @@ describe('TodoMVC Test', () => {
             await click(page.completedFilterLink());
 
             //Assert
-            browser.wait(EC.presenceOf(page.todoCountLbl()));
+            browser.wait(EC.presenceOf(page.todoCountLbl()), DEFAULT_TIMEOUT);
             expect(await page.completedFilterLink().getAttribute('class')).toBe('selected');
             expect(await page.todoCountLbl().getText()).toBe(assertCount.toString());
             expect(await page.itemsLbl(itemToComplete).getText()).toBe(todo[itemToComplete]);
@@ -536,7 +536,10 @@ describe('TodoMVC Test', () => {
             //Wait for ajax call to finish
             await waitForAjax();
 
-            browser.wait(EC.elementToBeClickable(page.completedFilterLink()));
+            browser.wait(
+                        EC.elementToBeClickable(page.completedFilterLink()),
+                        DEFAULT_TIMEOUT
+                        );
 
             //Assert
             expect(await page.itemsCount()).toBe(todo.length);
