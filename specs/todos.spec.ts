@@ -225,9 +225,7 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should clear completed is not displayed', async () => {
-            if(!EC.invisibilityOf(page.clearCompletedBtn())){
-                fail("Clear completed button still visible.");
-            }
+            expect(await page.clearCompletedBtn().isPresent()).toBe(false);
         });
 
         it('Should have correct todo items left', async () => {
