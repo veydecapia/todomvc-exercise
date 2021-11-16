@@ -258,7 +258,6 @@ describe('TodoMVC Test', () => {
         });
 
         it('Should mark an item 1 as complete', async () => {
-            //TODO: Add a function for create todo
             //Arrange: Add items
             for await (const item of todo) {
                 await page.addTodoListItem(item);
@@ -266,6 +265,7 @@ describe('TodoMVC Test', () => {
 
             //Act: Check item 1
             await click(page.markAsCompleteChkbox(0));
+            await waitForAjax();
 
             //Assert
             /**
@@ -280,6 +280,7 @@ describe('TodoMVC Test', () => {
         it('Should mark an item 2 as complete', async () => {
             //Act: Check item 2
             await click(page.markAsCompleteChkbox(1));
+            await waitForAjax();
 
             //Assert
             /**
@@ -294,6 +295,7 @@ describe('TodoMVC Test', () => {
         it('Should unmark an item as complete', async () => {
             //Act: Check item 1
             await click(page.markAsCompleteChkbox(0));
+            await waitForAjax();
 
             //Assert
             /**
