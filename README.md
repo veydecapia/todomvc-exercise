@@ -20,7 +20,8 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#tools">Tools Used and Why</a></li>
+    <li><a href="#scenarios-and-test-cases">Scenarios and Test Cases</a></li>
+    <li><a href="#tools-used-and-why">Tools Used and Why</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -179,6 +180,73 @@ This will run the automated test that covers the following test scenarios: <br/>
    - [x] Visual Studio Code Supports debugging for Typescript/Javascript based applications.
    - [x] Visual Studio Code (VSCode) is the most popular development environment.
 
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+## Scenarios and Test Cases
+
+### Covers the following Scenarios
+This will run the automated test for TodoMVC website that covers the following test scenarios:
+
+- Go to the TodoMVC website
+- Add a new Todo
+- Mark all Todo items as complete
+- Unmark all Todo items as complete
+- Mark Todo items as complete
+- Edit a Todo item
+- Todo list filtering and data persistence
+
+
+### Contains the following Test Cases
+
+
+1. Go to Todo website
+    - Should have no items previously added
+    - Should have zero number of todos in local storage
+    - Should not display main and footer
+    - Should have correct placeholder
+
+2. Add new todo > Todo Item: Todo Test #1 *The test cases below applies to each of the test data present in json file*
+    - Should label contains Todo Test #1 & appends to the bottom of the list
+    - Should the text input field be blank/cleared
+    - Should add one items left
+    - Should display main and footer
+    - Should have correct number of todos in local storage
+
+3. Add new todo > Should trim the text input
+4. Mark all todo items as complete
+    - Should mark all items as complete
+    - Should clear completed items in the list
+    - Should not display main and footer
+    - Should toggle all is not displayed
+    - Should have zero number of todos in local storage
+5. Unmark all todo items as complete
+    - Should unmark all items as complete
+    - Should clear completed is not displayed
+    - Should have correct todo items left
+    - Should have correct number of todos in local storage
+6. Mark todo items as complete
+    - Should mark an item 1 as complete
+    - Should mark an item 2 as complete
+    - Should unmark an item as complete
+    - Should have correct number of todos in local storage
+7. Edit a todo item
+    - Should edit an item
+    - Should complete and delete button not displayed when editing an item
+    - Should save edits on enter
+    - Should save edits on blur
+    - Should trim input text
+    - Should remove the item if input text is empty
+    - Should cancel edit on escape
+8. Todo list filtering
+    - Should All filter be the default
+    - Should display Active items
+    - Should display Completed items
+    - Should display All items
+    - Should display previous filter on browser back
+    - Should display correct filter on browser reload - Data Persistence
+    - Should display correct filter on browser forward
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
