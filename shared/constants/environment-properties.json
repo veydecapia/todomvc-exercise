@@ -1,0 +1,18 @@
+{
+    "PROD" : {
+        "URL" : "https://www.todobackend.com/client/index.html?https://todo-backend-django.herokuapp.com/",
+        "dbConnectionString" : ""
+    },
+    "TEST01" : {
+        "URL" : "",
+        "dbConnectionString" : ""
+    },
+    "TEST02" : {
+        "URL" : "",
+        "dbConnectionString" : ""
+    },
+    "TEST03" : {
+        "URL" : "",
+        "dbConnectionString" : ""
+    }
+}
